@@ -1,0 +1,1 @@
+awk '{print ($2=="w")+($3=="ah")+($4=="t")+($5=="s")+($6="y")+($7=="uh")+($8=="r")+($9=="n")+($10=="ey")+($11=="m"), $1}' neighbors.txt | sort -n > neighbors-rank.txt

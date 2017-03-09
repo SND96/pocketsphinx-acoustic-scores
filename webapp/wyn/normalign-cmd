@@ -1,0 +1,1 @@
+for f in *-align.txt ; do awk '/^(w|ah|t|s|y|uh|r|n|ey|m)  / {printf "%2s %6.3f %6.3f ", $1, -log(1-$5), log($3-$2+1)} END {print FILENAME}' $f | tee -a normalign.txt ; done

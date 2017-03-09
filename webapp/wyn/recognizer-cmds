@@ -1,0 +1,5 @@
+for w in wyn*.wav ; do ~/pocketsphinx/bin/pocketsphinx_continuous -infile $w -jsgf wyn-align.jsgf -dict phonemes.dict -backtrace yes -fsgusefiller no -bestpath no 2>&1 | tee $w-align.txt ; done
+
+for w in wyn*.wav ; do ~/pocketsphinx/bin/pocketsphinx_continuous -infile $w -jsgf wyn-neighbors.jsgf -dict phonemes.dict -backtrace yes -fsgusefiller no -bestpath yes 2>&1 | tee $w-neighbors.txt ; done
+
+for w in wyn*.wav ; do ~/pocketsphinx/bin/pocketsphinx_continuous -infile $w -jsgf wyn-words.jsgf -dict words.dict -backtrace yes -fsgusefiller no -bestpath no 2>&1 | tee $w-words.txt ; done
