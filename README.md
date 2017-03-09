@@ -12,7 +12,9 @@ These dependencies are required for the application to run.
 *Formidable.js
 
 To install them run the following commands
+
 Express
+
 `$ npm init`
 
 Hit Enter
