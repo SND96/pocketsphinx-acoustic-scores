@@ -1,8 +1,11 @@
+# Pocketsphinx Acoustic Scores
 First step is to download the repository. Open a terminal and run the following commands
 
 `$ git clone https://github.com/SND96/pocketsphinx-acoustic-scores`
 
 `$ cd pocketsphinx-acoustic-scores`
+
+Pocketsphinx is required to be downloaded on your computer as well. Refer to the pocketsphinx website for instructions on how to obtain it.
 
 # Dependencies
 These dependencies are required for the application to run.
@@ -44,3 +47,4 @@ Then in the opened browser window go to address localhost:8080
 
 Select the "What's your name?" option in the drop down menu and press start to record your voide. Pressing stop ends the recording and outputs the acoustic scores.
 NOTE: The acoustic scores for now are output in the terminal window itself.
+
