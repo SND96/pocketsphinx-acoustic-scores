@@ -110,26 +110,26 @@
         recorder && recorder.stop();
        rec && rec.stop();
         displayRecording(false);
-        //Saving and sending the data to the server
+      //   //Saving and sending the data to the server
       
-       rec && rec.exportWAV(function(blob) {
-       var oReq = new XMLHttpRequest();
-       oReq.open("POST", '/data', true);
-       oReq.onload = function (oEvent) {
+       // rec && rec.exportWAV(function(blob) {
+       // var oReq = new XMLHttpRequest();
+       // oReq.open("POST", '/data', true);
+       // oReq.onload = function (oEvent) {
 
-         };
-       var formData = new FormData();
-       formData.append("operation", "addMessage");
-       formData.append("msg", blob);
+       //   };
+       // var formData = new FormData();
+       // formData.append("operation", "addMessage");
+       // formData.append("msg", blob);
 
-       oReq.send(formData);
+       // oReq.send(formData);
        // oReq = new XMLHttpRequest();
        // oReq.open("GET", '/scores', false);
        // oReq.send(null);
        // alert(oReq.responseText);
 
 
-     });
+      // });
    };
 
        
@@ -179,18 +179,31 @@
       // This initializes the recognizer. When it calls back, we add words
       var initRecognizer = function() {
           // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-          postRecognizerJob({command: 'initialize'},
+          postRecognizerJob({command: 'load',
+                              data: [["phonemes.dict"]]
+                              });
+          postRecognizerJob({command: 'initialize',// data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
+                             //callbackId: id,
+                                data: [  //["-jsgf", "wyn-align.jsgf"],
+                              // ["-dict", "phonemes.dict"],
+                               //  //["-hmm","my_model"],
+                                ["-backtrace", "yes"],
+                               ["-fsgusefiller","no"],
+                                ["-bestpath","no"]
+                                ]
+                             },
+                             
+
                             function() {
                                         if (recorder) recorder.consumers = [recognizer];
                                         feedWords(wordList);});
-          postRecognizerJob({command: 'initialize',
-                        callbackId: id,
-                        data: [  ["-jsgf", "wyn/wyn-align.jsgf"],
-                               ["-dict", "wyn/phonemes.dict"],
-                               ["-backtrace", "yes"]
-                               ["-fsgusefiller","no"]
-                               ["-bestpath","no"]]
-                       });
+          // postRecognizerJob({command: 'initialize',
+          //               callbackId: id,
+          //              },
+          //              function(){
+          //               if (recorder) recorder.consumers = [recognizer];
+
+          //              });
 
       };
 
