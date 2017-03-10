@@ -183,6 +183,15 @@
                             function() {
                                         if (recorder) recorder.consumers = [recognizer];
                                         feedWords(wordList);});
+          postRecognizerJob({command: 'initialize',
+                        callbackId: id,
+                        data: [  ["-jsgf", "wyn/wyn-align.jsgf"],
+                               ["-dict", "wyn/phonemes.dict"],
+                               ["-backtrace", "yes"]
+                               ["-fsgusefiller","no"]
+                               ["-bestpath","no"]]
+                       });
+
       };
 
       // When the page is loaded, we spawn a new recognizer worker and call getUserMedia to
