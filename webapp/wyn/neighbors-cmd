@@ -1,1 +1,0 @@
-awk '/^word / {if (nl) {print ""}; printf FILENAME " "; nl=1; next} /    / && !/^sil / && !/NULL/ {printf $1 " "}' wyn*.wav-neighbors.txt > neighbors.txt
