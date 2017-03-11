@@ -177,8 +177,9 @@
                         function() {feedGrammar(grammars, 0);});
       };
       // This initializes the recognizer. When it calls back, we add words
-      var initRecognizer = function() {
+     var initRecognizer = function() {
           // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
+<<<<<<< HEAD
          
 //       var hello = function () {
 //   var log = console.warn;
@@ -211,6 +212,26 @@
                                         );
 
 
+=======
+          postRecognizerJob({command: 'load',
+                              data: [["phonemes.dict"]]
+                              });
+          postRecognizerJob({command: 'initialize',// data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
+                             //callbackId: id,
+                                data: [  //["-jsgf", "wyn-align.jsgf"],
+                               ["-dict", "phonemes.dict"],
+                               //  //["-hmm","my_model"],
+                                ["-backtrace", "yes"],
+                               ["-fsgusefiller","no"],
+                                ["-bestpath","no"]
+                                ]
+                             },
+                             
+
+                            function() {
+                                        if (recorder) recorder.consumers = [recognizer];
+                                        feedWords(wordList);});
+>>>>>>> 1a4aa8edd70c39233419fab3c00223184088effb
           // postRecognizerJob({command: 'initialize',
           //               callbackId: id,
           //              },
@@ -220,6 +241,7 @@
           //              });
 
       };
+
 
       // When the page is loaded, we spawn a new recognizer worker and call getUserMedia to
       // request access to the microphone
