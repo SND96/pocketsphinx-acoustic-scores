@@ -6,7 +6,7 @@
     <title>PocketSphinx.js</title>
   </head>
   <body>
-          <script src="js/FileSaver.js"></script>
+         
 
     <h2>PocketSphinx.js live demo</h2>
     <ul>
@@ -22,6 +22,8 @@
     </div>
     <h2>Status</h2>
     <div id="current-status">Loading page</div>
+    <h2>Acoustic Scores</h2>
+    <div id="resultymf"></div>
 
     <script>
       // These will be initialized later
@@ -32,12 +34,11 @@
       // A convenience function to post a message to the recognizer and associate
       // a callback to its response
       function postRecognizerJob(message, callback) {
-        var msg = message || {};
+        var msg = message || {}; 
         if (callbackManager) msg.callbackId = callbackManager.add(callback);
         if (recognizer) recognizer.postMessage(msg);
       };
 
- 
     //This function initializes an instance of the recorder
     //it posts a message right away and calls onReady when it
     //is ready so that onmessage can be properly set
@@ -60,7 +61,7 @@
         if (isRecorderReady && isRecognizerReady) startBtn.disabled = stopBtn.disabled = false;
       };
 
-      // This is just a logging window where we display the status
+      // This is just a logging window where we display the  
       function updateStatus(newStatus) {
         document.getElementById('current-status').innerHTML += "<br/>" + newStatus;
       };
@@ -175,28 +176,41 @@
            postRecognizerJob({command: 'addWords', data: words},
                         function() {feedGrammar(grammars, 0);});
       };
-
       // This initializes the recognizer. When it calls back, we add words
       var initRecognizer = function() {
           // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-          postRecognizerJob({command: 'load',
-                              data: [["phonemes.dict"]]
-                              });
+         
+//       var hello = function () {
+//   var log = console.warn;
+//   console.warn = function () {
+//     log.call(this,"Hello");
+//     //document.write("hwllo");
+//     //log.apply(this, Array.prototype.slice.call(arguments));
+//     display(log);
+//     log.apply(this, Array.prototype.slice.call(arguments));
+//   };
+// };
+// hello();
           postRecognizerJob({command: 'initialize',// data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
                              //callbackId: id,
                                 data: [  //["-jsgf", "wyn-align.jsgf"],
                               // ["-dict", "phonemes.dict"],
                                //  //["-hmm","my_model"],
                                 ["-backtrace", "yes"],
-                               ["-fsgusefiller","no"],
-                                ["-bestpath","no"]
-                                ]
+                               ["-fsgusefiller","yes"],
+                                ["-bestpath","yes"]
+                                                              ]
                              },
                              
 
-                            function() {
+                            function(id) {
                                         if (recorder) recorder.consumers = [recognizer];
-                                        feedWords(wordList);});
+                                        feedWords(wordList);}
+
+
+                                        );
+
+
           // postRecognizerJob({command: 'initialize',
           //               callbackId: id,
           //              },
@@ -229,6 +243,45 @@
                   if (e.data.hasOwnProperty('final') &&  e.data.final) newHyp = "Final: " + newHyp;
                   updateHyp(newHyp);
                 }
+
+                if (e.data.hasOwnProperty('stringer')) {
+                  var newStringer = e.data.stringer;
+                  newStringer = "Final: " + newStringer;
+                  if(e.data.hasOwnProperty('final')) 
+                    { var finalString = [];
+                      var i =0;
+                      var word =[];
+
+                      while(word!=["wor"] && i<600)
+                      {
+                        if(String(newStringer[i])==" " || String(newStringer[i])==",")
+                         { word =[];
+                         }
+                        else
+                         { //console.log(word);
+                          word += newStringer[i];
+                        }
+                        i++;
+
+                      }
+                      finalString = "wor";
+                      for(;String(newStringer[i])!="\v";i++)
+                      { if(String(newStringer[i]) == ",")
+                        { finalString += "<br/>";
+                          continue;
+                        }
+                        if(String(newStringer[i])== " ")
+                        {
+                          finalString += "&nbsp;"
+                        }
+                        finalString += newStringer[i];
+                        
+                      }
+
+                      document.getElementById('resultymf').innerHTML += "<br/>" + String(finalString) + '\n';
+                }
+                }
+
                 // This is the case when we have an error
                 if (e.data.hasOwnProperty('status') && (e.data.status == "error")) {
                   updateStatus("Error in " + e.data.command + " with code " + e.data.code);
@@ -282,7 +335,7 @@
     <script src="js/callbackManager.js"></script>
     <script src="js/audioRecorderWorker.js"></script>
     <script src="js/recorder.js"></script>
-    
+    <script src="js/recognizer.js"></script>
 
   </body>
 </html>

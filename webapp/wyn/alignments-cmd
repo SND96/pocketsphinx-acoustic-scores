@@ -1,1 +1,0 @@
-for f in *-align.txt ; do awk '/^(w|ah|t|s|y|uh|r|n|ey|m)  / {printf "%2s %5d %4.2f ", $1, $5, ($3-$2)/100.0} END {print FILENAME}' $f >> alignments.txt ; done

@@ -48,6 +48,15 @@ function startup(onMessage) {
 	var pocketsphinxJS = (event.data && event.data.length && (event.data.length > 0)) ? event.data : 'pocketsphinx.js';
 	importScripts(pocketsphinxJS);
 	self.onmessage = onMessage;
+// 	(function () {
+//   var log = console.warn;
+//   console.warn = function () {
+//    log.call(this, ...arguments);
+//   	document.write("hello");
+//     log.apply(this, Array.prototype.slice.call(arguments));
+//    // display(log);
+//   };
+// }());
 	self.postMessage({});
     };
 }
@@ -106,9 +115,10 @@ function segToArray(segmentation) {
 		     'start': segmentation.get(i).start,
 		     'end': segmentation.get(i).end});
     return output;
+
 };
 
-
+var stringer = []
 function initialize(data, clbId) {
     var config = new Module.Config();
     buffer = new Module.AudioBuffer();
@@ -121,17 +131,39 @@ function initialize(data, clbId) {
 		post({status: "error", command: "initialize", code: "js-data"});
 	    }
 	}
+	
+var log = console.warn;
+	(function () {
+
+ 	  	console.warn = function (message) {
+   	log.call(this);
+  	//document.write("hello");
+  	stringer.push(message);
+  	stringer.push('\n');
+  	console.log(message);
+  //	document.getElementById('resultymf').innerHTML += "<br/>" + message + '\n';
+    log.apply(this, Array.prototype.slice.call(arguments));
+   // display(log);
+   //	post({ status: "done", command});
+  };
+}());
+	// console.log(stringer);
+
     }
     var output;
     if(recognizer) {
+    	//document.getElementById('resultymf').innerHTML += "<br/>" + message + '\n';
+
 	output = recognizer.reInit(config);
 	if (output != Module.ReturnType.SUCCESS) post({status: "error", command: "initialize", code: output});
     } else {
 	recognizer = new Module.Recognizer(config);
 	segmentation = new Module.Segmentation();
+
 	if (recognizer === undefined) post({status: "error", command: "initialize", code: Module.ReturnType.RUNTIME_ERROR});
-	else post({status: "done", command: "initialize", id: clbId});
+	else post({status: "done", command: "initialize", id: clbId});//, stringer:stringer});
     }
+        //post({id: clbId, data: stringer, status: "done", command: "lookupWords"})
     config.delete();
 }
 
@@ -251,6 +283,7 @@ function start(id) {
 		return;
 	    }
 	}
+	stringer = []
 	output = recognizer.start();
 	if (output != Module.ReturnType.SUCCESS)
 	    post({status: "error", command: "start", code: output});
@@ -265,11 +298,15 @@ function stop() {
 	if (output != Module.ReturnType.SUCCESS)
 	    post({status: "error", command: "stop", code: output});
 	else {
+			stringer.push("\v");
+
 	    recognizer.getHypseg(segmentation);
 	    post({hyp: Utf8Decode(recognizer.getHyp()),
 		  hypseg: segToArray(segmentation),
-		  final: true});
-	}
+		  final: true,
+		  stringer: stringer
+		     });
+	    	}
     } else {
 	post({status: "error", command: "stop", code: "js-no-recognizer"});
     }
